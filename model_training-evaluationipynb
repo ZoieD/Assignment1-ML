@@ -2,7 +2,7 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": 34,
+   "execution_count": 24,
    "id": "35a76fcc-78e8-42ef-80a4-c2b268345bdf",
    "metadata": {},
    "outputs": [],
@@ -27,7 +27,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 25,
    "id": "859ca07b-6a4c-452a-883f-621f48373529",
    "metadata": {},
    "outputs": [
@@ -207,7 +207,7 @@
        "[2928 rows x 7 columns]"
       ]
      },
-     "execution_count": 2,
+     "execution_count": 25,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -227,12 +227,13 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 77,
    "id": "e69eb5b1-1acd-4a65-9fc1-d9fce9c54d73",
    "metadata": {},
    "outputs": [],
    "source": [
-    "X=data.drop('SalePrice', axis=1)\n",
+    "### Best model performance using only `Overral Qual`, `Total Bsmt SF`, `Gr Liv Area` and `Garage Cars`\n",
+    "X=data.drop(['SalePrice', 'Garage Area', '1st Flr SF'], axis=1)\n",
     "\n",
     "y=data['SalePrice']"
    ]
@@ -249,7 +250,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
+   "execution_count": 78,
    "id": "9657af96-1e0e-4123-a60b-b5f651e22c8f",
    "metadata": {},
    "outputs": [],
@@ -269,7 +270,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 28,
+   "execution_count": 79,
    "id": "777e902b-1653-4f6c-b8d2-35f2f4441952",
    "metadata": {},
    "outputs": [],
@@ -280,7 +281,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 31,
+   "execution_count": 80,
    "id": "2597efe8-10a6-46c1-a9e6-616852a74927",
    "metadata": {},
    "outputs": [
@@ -290,7 +291,7 @@
        "LinearRegression()"
       ]
      },
-     "execution_count": 31,
+     "execution_count": 80,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -305,7 +306,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 41,
+   "execution_count": 81,
    "id": "da6480ea-65b7-4a0e-95a5-11daf51469ac",
    "metadata": {},
    "outputs": [],
@@ -315,7 +316,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 42,
+   "execution_count": 82,
    "id": "e44173ff-2b5b-461e-9c0d-dc27bf02f864",
    "metadata": {},
    "outputs": [
@@ -346,15 +347,15 @@
        "  <tbody>\n",
        "    <tr>\n",
        "      <th>MAE</th>\n",
-       "      <td>5.336492e+07</td>\n",
+       "      <td>2.587738e+04</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>MSE</th>\n",
-       "      <td>3.149086e+15</td>\n",
+       "      <td>1.814903e+09</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>RMSE</th>\n",
-       "      <td>5.611672e+07</td>\n",
+       "      <td>4.260168e+04</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -362,12 +363,12 @@
       ],
       "text/plain": [
        "           metrics\n",
-       "MAE   5.336492e+07\n",
-       "MSE   3.149086e+15\n",
-       "RMSE  5.611672e+07"
+       "MAE   2.587738e+04\n",
+       "MSE   1.814903e+09\n",
+       "RMSE  4.260168e+04"
       ]
      },
-     "execution_count": 42,
+     "execution_count": 82,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -409,7 +410,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 19,
+   "execution_count": 83,
    "id": "fe89e992-34f0-45a6-89af-55806705162f",
    "metadata": {},
    "outputs": [],
@@ -421,7 +422,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 20,
+   "execution_count": 84,
    "id": "e8067da4-3303-41fd-96a5-ceea15a4cc5b",
    "metadata": {},
    "outputs": [],
@@ -440,7 +441,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 21,
+   "execution_count": 85,
    "id": "6a9fa61b-c26a-4d20-bea3-a201719f61ad",
    "metadata": {},
    "outputs": [],
@@ -450,7 +451,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 22,
+   "execution_count": 86,
    "id": "1e5d8625-303f-4a83-9e4b-ff9afb4edfa9",
    "metadata": {},
    "outputs": [
@@ -460,7 +461,7 @@
        "LinearRegression()"
       ]
      },
-     "execution_count": 22,
+     "execution_count": 86,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -479,7 +480,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 23,
+   "execution_count": 87,
    "id": "12c450c7-489f-442e-a407-7e930237f2e4",
    "metadata": {},
    "outputs": [],
@@ -489,7 +490,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 24,
+   "execution_count": 88,
    "id": "5431b96c-f70e-419b-91de-af96b6716531",
    "metadata": {},
    "outputs": [
@@ -523,32 +524,32 @@
        "    <tr>\n",
        "      <th>2390</th>\n",
        "      <td>344133</td>\n",
-       "      <td>277758.798670</td>\n",
-       "      <td>66374.201330</td>\n",
+       "      <td>276996.872565</td>\n",
+       "      <td>67136.127435</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>196</th>\n",
        "      <td>132000</td>\n",
-       "      <td>130986.505674</td>\n",
-       "      <td>1013.494326</td>\n",
+       "      <td>135464.226525</td>\n",
+       "      <td>-3464.226525</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>2307</th>\n",
        "      <td>192100</td>\n",
-       "      <td>250924.671307</td>\n",
-       "      <td>-58824.671307</td>\n",
+       "      <td>249802.240131</td>\n",
+       "      <td>-57702.240131</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>1731</th>\n",
        "      <td>198444</td>\n",
-       "      <td>176407.342109</td>\n",
-       "      <td>22036.657891</td>\n",
+       "      <td>187668.174150</td>\n",
+       "      <td>10775.825850</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>1100</th>\n",
        "      <td>250000</td>\n",
-       "      <td>299606.717578</td>\n",
-       "      <td>-49606.717578</td>\n",
+       "      <td>297120.103327</td>\n",
+       "      <td>-47120.103327</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -556,14 +557,14 @@
       ],
       "text/plain": [
        "      Y_Test         Y_Pred     Residuals\n",
-       "2390  344133  277758.798670  66374.201330\n",
-       "196   132000  130986.505674   1013.494326\n",
-       "2307  192100  250924.671307 -58824.671307\n",
-       "1731  198444  176407.342109  22036.657891\n",
-       "1100  250000  299606.717578 -49606.717578"
+       "2390  344133  276996.872565  67136.127435\n",
+       "196   132000  135464.226525  -3464.226525\n",
+       "2307  192100  249802.240131 -57702.240131\n",
+       "1731  198444  187668.174150  10775.825850\n",
+       "1100  250000  297120.103327 -47120.103327"
       ]
      },
-     "execution_count": 24,
+     "execution_count": 88,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -574,7 +575,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 27,
+   "execution_count": 89,
    "id": "eece0fdb-9fa6-4036-9cae-f63e726b7dcb",
    "metadata": {},
    "outputs": [
@@ -605,15 +606,15 @@
        "  <tbody>\n",
        "    <tr>\n",
        "      <th>MAE</th>\n",
-       "      <td>2.143529e+04</td>\n",
+       "      <td>2.163017e+04</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>MSE</th>\n",
-       "      <td>1.028299e+09</td>\n",
+       "      <td>1.036006e+09</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>RMSE</th>\n",
-       "      <td>3.206710e+04</td>\n",
+       "      <td>3.218704e+04</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -621,12 +622,12 @@
       ],
       "text/plain": [
        "           metrics\n",
-       "MAE   2.143529e+04\n",
-       "MSE   1.028299e+09\n",
-       "RMSE  3.206710e+04"
+       "MAE   2.163017e+04\n",
+       "MSE   1.036006e+09\n",
+       "RMSE  3.218704e+04"
       ]
      },
-     "execution_count": 27,
+     "execution_count": 89,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -658,7 +659,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 35,
+   "execution_count": 90,
    "id": "b5aaefa9-7f53-45ff-b8c8-7cb0a1a13981",
    "metadata": {},
    "outputs": [],
@@ -669,7 +670,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 36,
+   "execution_count": 91,
    "id": "5d4b54b8-2753-4cb8-abb6-4523e59c362f",
    "metadata": {},
    "outputs": [
@@ -679,7 +680,7 @@
        "RandomForestRegressor(random_state=42)"
       ]
      },
-     "execution_count": 36,
+     "execution_count": 91,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -692,7 +693,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 39,
+   "execution_count": 92,
    "id": "09cbbfc0-94b4-4ac7-a496-1ab525d012eb",
    "metadata": {},
    "outputs": [],
@@ -703,7 +704,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 40,
+   "execution_count": 93,
    "id": "010765c9-8aeb-4134-9d2e-297cadd1efe0",
    "metadata": {},
    "outputs": [
@@ -734,15 +735,15 @@
        "  <tbody>\n",
        "    <tr>\n",
        "      <th>MAE</th>\n",
-       "      <td>1.956955e+04</td>\n",
+       "      <td>2.031228e+04</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>MSE</th>\n",
-       "      <td>8.527321e+08</td>\n",
+       "      <td>9.068877e+08</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>RMSE</th>\n",
-       "      <td>4.246915e+04</td>\n",
+       "      <td>4.260168e+04</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -750,12 +751,12 @@
       ],
       "text/plain": [
        "           metrics\n",
-       "MAE   1.956955e+04\n",
-       "MSE   8.527321e+08\n",
-       "RMSE  4.246915e+04"
+       "MAE   2.031228e+04\n",
+       "MSE   9.068877e+08\n",
+       "RMSE  4.260168e+04"
       ]
      },
-     "execution_count": 40,
+     "execution_count": 93,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -772,7 +773,15 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "id": "77ab498f-45d7-4186-b7eb-4af8a8d50b95",
+   "id": "33b58dba-923c-4fdc-a173-dd87fdc62dbf",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9f997101-e1ae-439d-8830-ca1351584fd4",
    "metadata": {},
    "outputs": [],
    "source": []

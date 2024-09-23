@@ -1,0 +1,811 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "35a76fcc-78e8-42ef-80a4-c2b268345bdf",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Common imports\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "\n",
+    "# data visualization\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "\n",
+    "# data processing\n",
+    "from sklearn.preprocessing import PolynomialFeatures\n",
+    "from sklearn.ensemble import RandomForestRegressor\n",
+    "from sklearn.preprocessing import StandardScaler\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "from sklearn.linear_model import LinearRegression\n",
+    "from sklearn import metrics\n",
+    "from joblib import dump, load"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "859ca07b-6a4c-452a-883f-621f48373529",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Overall Qual</th>\n",
+       "      <th>Total Bsmt SF</th>\n",
+       "      <th>1st Flr SF</th>\n",
+       "      <th>Gr Liv Area</th>\n",
+       "      <th>Garage Cars</th>\n",
+       "      <th>Garage Area</th>\n",
+       "      <th>SalePrice</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>6</td>\n",
+       "      <td>1080.0</td>\n",
+       "      <td>1656</td>\n",
+       "      <td>1656</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>528.0</td>\n",
+       "      <td>215000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>5</td>\n",
+       "      <td>882.0</td>\n",
+       "      <td>896</td>\n",
+       "      <td>896</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>730.0</td>\n",
+       "      <td>105000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>6</td>\n",
+       "      <td>1329.0</td>\n",
+       "      <td>1329</td>\n",
+       "      <td>1329</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>312.0</td>\n",
+       "      <td>172000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>7</td>\n",
+       "      <td>2110.0</td>\n",
+       "      <td>2110</td>\n",
+       "      <td>2110</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>522.0</td>\n",
+       "      <td>244000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>5</td>\n",
+       "      <td>928.0</td>\n",
+       "      <td>928</td>\n",
+       "      <td>1629</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>482.0</td>\n",
+       "      <td>189900</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2923</th>\n",
+       "      <td>6</td>\n",
+       "      <td>1003.0</td>\n",
+       "      <td>1003</td>\n",
+       "      <td>1003</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>588.0</td>\n",
+       "      <td>142500</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2924</th>\n",
+       "      <td>5</td>\n",
+       "      <td>864.0</td>\n",
+       "      <td>902</td>\n",
+       "      <td>902</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>484.0</td>\n",
+       "      <td>131000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2925</th>\n",
+       "      <td>5</td>\n",
+       "      <td>912.0</td>\n",
+       "      <td>970</td>\n",
+       "      <td>970</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>132000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2926</th>\n",
+       "      <td>5</td>\n",
+       "      <td>1389.0</td>\n",
+       "      <td>1389</td>\n",
+       "      <td>1389</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>418.0</td>\n",
+       "      <td>170000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2927</th>\n",
+       "      <td>7</td>\n",
+       "      <td>996.0</td>\n",
+       "      <td>996</td>\n",
+       "      <td>2000</td>\n",
+       "      <td>3.0</td>\n",
+       "      <td>650.0</td>\n",
+       "      <td>188000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>2928 rows × 7 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      Overall Qual  Total Bsmt SF  1st Flr SF  Gr Liv Area  Garage Cars  \\\n",
+       "0                6         1080.0        1656         1656          2.0   \n",
+       "1                5          882.0         896          896          1.0   \n",
+       "2                6         1329.0        1329         1329          1.0   \n",
+       "3                7         2110.0        2110         2110          2.0   \n",
+       "4                5          928.0         928         1629          2.0   \n",
+       "...            ...            ...         ...          ...          ...   \n",
+       "2923             6         1003.0        1003         1003          2.0   \n",
+       "2924             5          864.0         902          902          2.0   \n",
+       "2925             5          912.0         970          970          0.0   \n",
+       "2926             5         1389.0        1389         1389          2.0   \n",
+       "2927             7          996.0         996         2000          3.0   \n",
+       "\n",
+       "      Garage Area  SalePrice  \n",
+       "0           528.0     215000  \n",
+       "1           730.0     105000  \n",
+       "2           312.0     172000  \n",
+       "3           522.0     244000  \n",
+       "4           482.0     189900  \n",
+       "...           ...        ...  \n",
+       "2923        588.0     142500  \n",
+       "2924        484.0     131000  \n",
+       "2925          0.0     132000  \n",
+       "2926        418.0     170000  \n",
+       "2927        650.0     188000  \n",
+       "\n",
+       "[2928 rows x 7 columns]"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data = pd.read_csv(\"data_processed.csv\")\n",
+    "data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7bed5d9c-d467-4ec2-a6c4-9f0dd2741489",
+   "metadata": {},
+   "source": [
+    "#### Define X and Y"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 77,
+   "id": "e69eb5b1-1acd-4a65-9fc1-d9fce9c54d73",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "### Best model performance using only `Overral Qual`, `Total Bsmt SF`, `Gr Liv Area` and `Garage Cars`\n",
+    "X=data.drop(['SalePrice', 'Garage Area', '1st Flr SF'], axis=1)\n",
+    "\n",
+    "y=data['SalePrice']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ec03b304-60d0-4d8c-8323-a6b8706b30a6",
+   "metadata": {
+    "tags": []
+   },
+   "source": [
+    "#### Scaling on the feature for linear model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 78,
+   "id": "9657af96-1e0e-4123-a60b-b5f651e22c8f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Standardize features\n",
+    "scaler = StandardScaler()\n",
+    "X_scaled = scaler.fit_transform(X)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1f31b0b4-82ba-4618-a74f-1625ad1d0bde",
+   "metadata": {},
+   "source": [
+    "### Model 1 - Linear model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 79,
+   "id": "777e902b-1653-4f6c-b8d2-35f2f4441952",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Split data into training and testing sets\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 80,
+   "id": "2597efe8-10a6-46c1-a9e6-616852a74927",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 80,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Create a linear regression model\n",
+    "linearmodel = LinearRegression()\n",
+    "\n",
+    "# Fit the model to the training data\n",
+    "linearmodel.fit(X_train, y_train)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 81,
+   "id": "da6480ea-65b7-4a0e-95a5-11daf51469ac",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "y_pred = linearmodel.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 82,
+   "id": "e44173ff-2b5b-461e-9c0d-dc27bf02f864",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>metrics</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>MAE</th>\n",
+       "      <td>2.587738e+04</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>MSE</th>\n",
+       "      <td>1.814903e+09</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>RMSE</th>\n",
+       "      <td>4.260168e+04</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "           metrics\n",
+       "MAE   2.587738e+04\n",
+       "MSE   1.814903e+09\n",
+       "RMSE  4.260168e+04"
+      ]
+     },
+     "execution_count": 82,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "MAE_linear = metrics.mean_absolute_error(y_test,y_pred)\n",
+    "MSE_linear = metrics.mean_squared_error(y_test,y_pred)\n",
+    "RMSE_linear = np.sqrt(MSE_linear)\n",
+    "\n",
+    "pd.DataFrame([MAE_linear, MSE_linear, RMSE_linear],\n",
+    "             index=['MAE', 'MSE', 'RMSE'], columns=['metrics'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4d5306fb-5ac5-4244-bfa9-6612df5593bc",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9fc8a62f-eee1-43bd-a268-549cb34ed50a",
+   "metadata": {},
+   "source": [
+    "### Model 2- Polynomial model"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "45814a13-764b-4885-81d4-dc52fa59e530",
+   "metadata": {
+    "tags": []
+   },
+   "source": [
+    "#### Transform features into polynomial terms"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 83,
+   "id": "fe89e992-34f0-45a6-89af-55806705162f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Create polynomial features of degree 2\n",
+    "polynomial_converter = PolynomialFeatures(degree=2, include_bias=False)\n",
+    "X_poly = polynomial_converter.fit_transform(X_scaled)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 84,
+   "id": "e8067da4-3303-41fd-96a5-ceea15a4cc5b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Split the data into training and testing sets (80% training, 20% testing)\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X_poly, y, test_size=0.2, random_state=42)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "27a038c3-6e24-43cf-9d9e-8a04560dd0a9",
+   "metadata": {},
+   "source": [
+    "#### Training a Polynomial Regression Model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 85,
+   "id": "6a9fa61b-c26a-4d20-bea3-a201719f61ad",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "polymodel=LinearRegression()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 86,
+   "id": "1e5d8625-303f-4a83-9e4b-ff9afb4edfa9",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 86,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "polymodel.fit(X_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "36370d48-f17a-44fd-92f8-6dbdd86e75c3",
+   "metadata": {},
+   "source": [
+    "#### Predicting testing data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 87,
+   "id": "12c450c7-489f-442e-a407-7e930237f2e4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "y_pred=polymodel.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 88,
+   "id": "5431b96c-f70e-419b-91de-af96b6716531",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Y_Test</th>\n",
+       "      <th>Y_Pred</th>\n",
+       "      <th>Residuals</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>2390</th>\n",
+       "      <td>344133</td>\n",
+       "      <td>276996.872565</td>\n",
+       "      <td>67136.127435</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>196</th>\n",
+       "      <td>132000</td>\n",
+       "      <td>135464.226525</td>\n",
+       "      <td>-3464.226525</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2307</th>\n",
+       "      <td>192100</td>\n",
+       "      <td>249802.240131</td>\n",
+       "      <td>-57702.240131</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1731</th>\n",
+       "      <td>198444</td>\n",
+       "      <td>187668.174150</td>\n",
+       "      <td>10775.825850</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1100</th>\n",
+       "      <td>250000</td>\n",
+       "      <td>297120.103327</td>\n",
+       "      <td>-47120.103327</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      Y_Test         Y_Pred     Residuals\n",
+       "2390  344133  276996.872565  67136.127435\n",
+       "196   132000  135464.226525  -3464.226525\n",
+       "2307  192100  249802.240131 -57702.240131\n",
+       "1731  198444  187668.174150  10775.825850\n",
+       "1100  250000  297120.103327 -47120.103327"
+      ]
+     },
+     "execution_count": 88,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pd.DataFrame({'Y_Test': y_test,'Y_Pred':y_pred, 'Residuals':(y_test-y_pred) }).head(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 89,
+   "id": "eece0fdb-9fa6-4036-9cae-f63e726b7dcb",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>metrics</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>MAE</th>\n",
+       "      <td>2.163017e+04</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>MSE</th>\n",
+       "      <td>1.036006e+09</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>RMSE</th>\n",
+       "      <td>3.218704e+04</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "           metrics\n",
+       "MAE   2.163017e+04\n",
+       "MSE   1.036006e+09\n",
+       "RMSE  3.218704e+04"
+      ]
+     },
+     "execution_count": 89,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "MAE_Poly = metrics.mean_absolute_error(y_test,y_pred)\n",
+    "MSE_Poly = metrics.mean_squared_error(y_test,y_pred)\n",
+    "RMSE_Poly = np.sqrt(MSE_Poly)\n",
+    "\n",
+    "pd.DataFrame([MAE_Poly, MSE_Poly, RMSE_Poly],\n",
+    "             index=['MAE', 'MSE', 'RMSE'], columns=['metrics'])\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "78b9b37b-78da-40da-84bb-57fe90aa8e87",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b0096dbf-e6f6-40b2-ae83-cf641cfe3425",
+   "metadata": {},
+   "source": [
+    "### Model 3 - Random Forest Model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 90,
+   "id": "b5aaefa9-7f53-45ff-b8c8-7cb0a1a13981",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Split the data (80% training, 20% testing)\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 91,
+   "id": "5d4b54b8-2753-4cb8-abb6-4523e59c362f",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "RandomForestRegressor(random_state=42)"
+      ]
+     },
+     "execution_count": 91,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Initialize and train the Random Forest regressor\n",
+    "rf_model = RandomForestRegressor(n_estimators=100, random_state=42)  # 100 trees in the forest\n",
+    "rf_model.fit(X_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 92,
+   "id": "09cbbfc0-94b4-4ac7-a496-1ab525d012eb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Predict on the test set\n",
+    "y_pred = rf_model.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 93,
+   "id": "010765c9-8aeb-4134-9d2e-297cadd1efe0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>metrics</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>MAE</th>\n",
+       "      <td>2.031228e+04</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>MSE</th>\n",
+       "      <td>9.068877e+08</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>RMSE</th>\n",
+       "      <td>4.260168e+04</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "           metrics\n",
+       "MAE   2.031228e+04\n",
+       "MSE   9.068877e+08\n",
+       "RMSE  4.260168e+04"
+      ]
+     },
+     "execution_count": 93,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "MAE_rf = metrics.mean_absolute_error(y_test,y_pred)\n",
+    "MSE_rf = metrics.mean_squared_error(y_test,y_pred)\n",
+    "RMSE_rf = np.sqrt(MSE_linear)\n",
+    "\n",
+    "pd.DataFrame([MAE_rf, MSE_rf, RMSE_rf],\n",
+    "             index=['MAE', 'MSE', 'RMSE'], columns=['metrics'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "33b58dba-923c-4fdc-a173-dd87fdc62dbf",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9f997101-e1ae-439d-8830-ca1351584fd4",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
